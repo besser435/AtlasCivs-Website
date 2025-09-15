@@ -8,7 +8,7 @@ import os
 import json
 import uuid
 
-from config import log, TEAW_DB_FILE, STATS_DB_FILE, PLAYER_BODY_SKIN_DIR, PLAYER_FACE_SKIN_DIR
+from config import log, ATLAS_DB_FILE, STATS_DB_FILE, PLAYER_BODY_SKIN_DIR, PLAYER_FACE_SKIN_DIR
 from config import SHOWCASE_SUBMISSIONS_DIR, SHOWCASE_IMAGES_DIR
 
 api_routes = Blueprint("api_blueprint", __name__)
@@ -27,7 +27,7 @@ def api():
 @api_routes.route("/api/status")
 def get_status():
     try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
+        with sqlite3.connect(ATLAS_DB_FILE) as conn:
             cursor = conn.cursor()
 
             # Check if the data is up to date
@@ -74,7 +74,7 @@ def get_status():
 @api_routes.route("/api/players")
 def get_all_players():
     try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
+        with sqlite3.connect(ATLAS_DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
 
@@ -84,8 +84,8 @@ def get_all_players():
                     name, 
                     online_duration, 
                     afk_duration, 
-                    town_name, 
-                    nation_name,
+                    first_joined,
+                    bio,
                     last_online,
                     CASE 
                         WHEN online_duration > 0 AND afk_duration > 0 THEN 'afk'
@@ -114,7 +114,7 @@ def get_all_players():
 @api_routes.route("/api/uuid_to_name/<uuid>")
 def get_name_from_uuid(uuid):
     try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
+        with sqlite3.connect(ATLAS_DB_FILE) as conn:
             cursor = conn.cursor()
 
             cursor.execute("SELECT name FROM players WHERE uuid = ?", (uuid,))
@@ -131,7 +131,7 @@ def get_name_from_uuid(uuid):
 @api_routes.route("/api/players_misc")
 def get_players_misc():
     try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
+        with sqlite3.connect(ATLAS_DB_FILE) as conn:
             cursor = conn.cursor()
 
             cursor.execute("SELECT COUNT(*) FROM players")
@@ -146,202 +146,13 @@ def get_players_misc():
             """, (fourteen_days_ago_ms,))
             active_players = cursor.fetchone()[0]
 
-            cursor.execute("SELECT SUM(balance) FROM players")
-            total_money = int(cursor.fetchone()[0]) or 0
 
         return {
             "total_players": total_players,
-            "active_players": active_players,
-            "total_money": total_money,
+            "active_players": active_players
         }, 200
     except Exception:
         log.error(f"Internal error getting `players_misc`: {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
-
-# Towns
-@api_routes.route("/api/towns")
-def get_all_towns():
-    try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-
-            # TODO: sort by:
-            # A-Z nation > A-Z town name within the nation group > A-Z town name outside of a nation/
-            # Activity status will not matter for now.
-
-            cursor.execute("""
-                SELECT 
-                    t.uuid, 
-                    t.name, 
-                    t.mayor, 
-                    t.nation_name, 
-                    t.founded, 
-                    t.is_active, 
-                    t.color_hex AS town_color,
-                    t.spawn_loc_x AS spawn_x,
-                    t.spawn_loc_z AS spawn_z,
-                    t.spawn_loc_y AS spawn_y,
-                    n.color_hex AS nation_color
-                FROM towns t
-                LEFT JOIN nations n ON t.nation_name = n.name
-                ORDER BY 
-                    CASE 
-                        WHEN t.nation = '' THEN 2    -- Towns without nations come later
-                        ELSE 1                       -- Towns with nations come first
-                    END,
-                    t.nation_name ASC,  -- Sort by nation name (alphabetical)
-                    t.name ASC          -- Sort by town name within the group
-            """)
-
-            towns = [dict(row) for row in cursor.fetchall()]
-
-        return jsonify(towns), 200
-    except Exception:
-        log.error(f"Internal error getting `towns`: {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
-@api_routes.route("/api/towns_misc")
-def get_towns_misc():
-    try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            # Towns count
-            cursor.execute("SELECT COUNT(*) FROM towns")
-            total_towns = cursor.fetchone()[0]
-
-            # Active towns count
-            cursor.execute("""
-                SELECT COUNT(*)
-                FROM towns
-                WHERE is_active == 1
-            """)
-            active_towns = cursor.fetchone()[0]
-
-            # Money total
-            cursor.execute("""
-                SELECT 
-                    (SELECT COALESCE(SUM(balance), 0) FROM towns) +
-                    (SELECT COALESCE(SUM(balance), 0) FROM nations)
-                AS total_balance
-            """)
-            total_money = int(cursor.fetchone()[0])
-
-            # Nations count
-            cursor.execute("SELECT COUNT(*) FROM nations")
-            total_nations = cursor.fetchone()[0]
-
-            # Active nations (at least one active town)
-            cursor.execute("""
-                SELECT COUNT(DISTINCT n.uuid)
-                FROM nations n
-                INNER JOIN towns t ON t.nation_name = n.name
-                WHERE t.is_active = 1
-            """)
-            active_nations = cursor.fetchone()[0]
-
-        return {
-            "total_towns": total_towns,
-            "active_towns": active_towns,
-            "total_nations": total_nations,
-            "active_nations": active_nations,
-            "total_money": total_money
-        }, 200
-    except Exception:
-        log.error(f"Internal error getting `towns_misc`: {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
-
-# Chat
-@api_routes.route("/api/chat_messages")
-def get_chat_messages():
-    try:
-        oldest_message_id = request.args.get("oldest_message_id", type=int)
-        newest_message_id = request.args.get("newest_message_id", type=int)
-
-        if oldest_message_id and newest_message_id:
-            return {"error": "invalid request: multiple args present"}, 400
-
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            
-            if oldest_message_id:   # Older messages before a certain ID (used when the user scrolls and wants older messages)
-                cursor.execute("""
-                    SELECT id, sender, sender_uuid, message, timestamp, type
-                    FROM chat
-                    WHERE id < ?
-                    ORDER BY id DESC
-                    LIMIT 200
-                """, (oldest_message_id,))
-            
-            elif newest_message_id: # New messages after a certain ID (used for updates)
-                cursor.execute("""
-                    SELECT id, sender, sender_uuid, message, timestamp, type
-                    FROM chat
-                    WHERE id > ?
-                    ORDER BY id ASC
-                    LIMIT 200
-                """, (newest_message_id,))
-            
-            else:   # All of the newest messages (used on page load)
-                cursor.execute("""
-                    SELECT id, sender, sender_uuid, message, timestamp, type
-                    FROM chat
-                    ORDER BY id DESC
-                    LIMIT 400
-                """)
-
-            chat_messages = []
-
-            for row in cursor.fetchall():   # Prevents HTML injection
-                sanitized_message = bleach.clean(row["message"], tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-                chat_messages.append({
-                    "id": row["id"],
-                    "sender": row["sender"],
-                    "sender_uuid": row["sender_uuid"],
-                    "message": sanitized_message,
-                    "timestamp": row["timestamp"],
-                    "type": row["type"],
-                })
-
-        chat_messages.reverse()
-
-        return jsonify(chat_messages), 200
-    except Exception:
-        log.error(f"Internal error getting `chat_messages`: {traceback.format_exc()}")
-        return "internal error", 500
-
-@api_routes.route("/api/chat_misc")
-def get_chat_misc():
-    try:
-        with sqlite3.connect(TEAW_DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            cursor.execute("SELECT COUNT(*) FROM chat")
-            messages_logged = cursor.fetchone()[0]
-
-            cursor.execute("""
-                SELECT variable, value
-                FROM variables
-                WHERE variable IN ("day", "weather", "world_time_24h")
-            """)
-            variables = dict(cursor.fetchall())
-
-            days_elapsed = int(variables.get("day", 0))
-            world_weather = variables.get("weather", "Unknown")
-            world_time = variables.get("world_time_24h", "06:00")
-
-        return {
-            "messages_logged": messages_logged,
-            "days_elapsed": days_elapsed,
-            "world_weather": world_weather,
-            "world_time": world_time
-        }, 200
-    except Exception:
-        log.error(f"Internal error getting `chat_misc`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500
 
 

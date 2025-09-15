@@ -11,10 +11,9 @@ from config import log
 import socket
 
 
-log.info("---- Starting TEAW Webserver ----")
+log.info("---- Starting AtlasCivs Webserver ----")
 
 app = Flask(__name__, template_folder="html", static_folder="")  # Tell Flask `static` is the current directory
-CORS(app, resources={r"/*": {"origins": "https://usa-industries.net"}})
 
 app.register_blueprint(template_routes)
 app.register_blueprint(api_routes)

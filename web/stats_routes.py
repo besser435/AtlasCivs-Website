@@ -8,7 +8,7 @@ import os
 import json
 import uuid
 
-from config import log, TEAW_DB_FILE, STATS_DB_FILE, PLAYER_FACE_SKIN_DIR
+from config import log, ATLAS_DB_FILE, STATS_DB_FILE, PLAYER_FACE_SKIN_DIR
 
 stats_routes = Blueprint("stats_blueprint", __name__)
 
@@ -24,7 +24,7 @@ def cm_to_km(cm):
     return f"{cm / 100_000:.3f}", "kilometers"
 
 def get_name(uuid):
-    with sqlite3.connect(TEAW_DB_FILE) as conn:
+    with sqlite3.connect(ATLAS_DB_FILE) as conn:
         cursor = conn.cursor()
         cursor.execute("""SELECT name FROM players WHERE uuid = ?""", (uuid,))
         name = cursor.fetchone()
@@ -63,7 +63,7 @@ def get_stats_leaderboard(stat):
         stat_translation = AVAILABLE_GENERAL_STATS[stat]
 
         # We should really join the stats.db and teaw.db into one database
-        with sqlite3.connect(STATS_DB_FILE) as stats_conn, sqlite3.connect(TEAW_DB_FILE) as teaw_conn:
+        with sqlite3.connect(STATS_DB_FILE) as stats_conn, sqlite3.connect(ATLAS_DB_FILE) as teaw_conn:
             stats_cursor = stats_conn.cursor()
             teaw_cursor = teaw_conn.cursor()
 
@@ -108,7 +108,7 @@ def get_stats_leaderboard(stat):
 # Custom stats
 def get_playtime_death_ratio():
     try:
-        with sqlite3.connect(STATS_DB_FILE) as stats_conn, sqlite3.connect(TEAW_DB_FILE) as teaw_conn:
+        with sqlite3.connect(STATS_DB_FILE) as stats_conn, sqlite3.connect(ATLAS_DB_FILE) as teaw_conn:
             stats_cursor = stats_conn.cursor()
             teaw_cursor = teaw_conn.cursor()
             
@@ -181,27 +181,4 @@ def handle_custom_stat(stat):
 
     except Exception:
         log.error(f"Internal error handling custom_stat for stat '{stat}': {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
-
-
-# Fishing (Hosted on a different website)
-@stats_routes.route("/api/fishing_leaderboard")
-def get_fishing_leaderboard():
-    try:
-        with sqlite3.connect(STATS_DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            cursor.execute("""
-                SELECT player_uuid, stat_value
-                FROM player_statistics
-                WHERE category = 'general' AND stat_key = 'FISH_CAUGHT'
-                ORDER BY stat_value DESC
-                LIMIT 10
-            """)
-            leaderboard = [{"uuid": row[0], "fish_caught": row[1]} for row in cursor.fetchall()]
-
-        return jsonify(leaderboard), 200
-    except Exception:
-        log.error(f"Internal error getting `fishing_leaderboard`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500

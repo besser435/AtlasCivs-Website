@@ -72,8 +72,8 @@ def update_players_table() -> None:
                 name = player_data.get("name")
                 online_duration = player_data.get("online_duration", 0)
                 afk_duration = player_data.get("afk_duration", 0)
-                first_joined = player_data.get("first_joined", 0)
                 bio = player_data.get("bio", "")
+                first_joined = player_data.get("first_joined", 0)
                 last_online = int(time.time() * 1000)   # convert to ms, as that is what we do everywhere
 
                 # NOTE: online_duration and afk_duration can still be non-zero even if the player is offline

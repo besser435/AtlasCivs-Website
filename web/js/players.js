@@ -95,17 +95,17 @@ class Player {
     constructor(
         uuid, name, 
         online_duration, afk_duration, 
-        town_name, nation_name, 
+        first_joined, bio,
         last_online, status) {
         
         this.uuid = uuid;
         this.name = name;
         this.online_duration = online_duration;
         this.afk_duration = afk_duration;
-        this.town_name = (town_name.replace(/_/g, " ")) || null;
-        this.nation_name = (nation_name.replace(/_/g, " ")) || null;
-        this.status = status;
+        this.bio = bio || null;
+        this.first_joined = first_joined;
         this.last_online = last_online;
+        this.status = status;
     
         this.text_status = getStatusText(this);
         this.playerSkin = getPlayerSkinObj(this.uuid);
@@ -152,24 +152,21 @@ function addPlayerCard(playerObj) {
     textStatus.title = new Date(playerObj.last_online).toLocaleString();
     playerDetails.appendChild(textStatus);
 
-    // Nation and town (doing it this way prevents HTML injection)
-    // Probably can just clean it in the API to avoid this (is it even possible to inject HTML from Towny?)
-    const nationName = document.createElement("p");
-    const nationLabel = document.createElement("b");
-    nationLabel.textContent = "Nation: ";
-    nationName.className = "nation-name";
-    nationName.appendChild(nationLabel);
-    nationName.appendChild(document.createTextNode(playerObj.nation_name));
-    playerObj.nation_name ? playerDetails.appendChild(nationName) : null;   // Only add if the player is in a nation
-    
-    const townName = document.createElement("p");
-    const townLabel = document.createElement("b");
-    townLabel.textContent = "Town: ";
-    townName.className = "town-name";
-    townName.appendChild(townLabel);
-    townName.appendChild(document.createTextNode(playerObj.town_name));
-    playerObj.town_name ? playerDetails.appendChild(townName) : null;   // Only add if the player is in a town
-    
+    // First joined date
+    const firstJoined = document.createElement("p");
+    const firstJoinedLabel = document.createElement("b");
+    firstJoinedLabel.textContent = "First joined: ";
+    firstJoined.appendChild(firstJoinedLabel);
+    firstJoined.appendChild(document.createTextNode(playerObj.first_joined ? new Date(playerObj.first_joined).toLocaleDateString() : "N/A"));
+    playerObj.first_joined ? playerDetails.appendChild(firstJoined) : null;
+        
+    // TODO: Sanitize this input
+    // Probably can just clean it in the API to avoid this (is it even possible to inject HTML from the DB?)
+    // Auto biography
+    const bio = document.createElement("p");
+    bio.className = "player-bio";
+    bio.appendChild(document.createTextNode(playerObj.bio));
+    playerObj.bio ? playerDetails.appendChild(bio) : null;   // Only add if the player has a bio
 
     // Status light
     const statusLight = document.createElement("div");
@@ -212,7 +209,7 @@ async function getPlayers() {
             const playerObj = new Player(
                 player.uuid, player.name, 
                 player.online_duration, player.afk_duration, 
-                player.town_name, player.nation_name, 
+                player.first_joined, player.bio,  
                 player.last_online, player.status
             );
             players.push(playerObj);
@@ -263,14 +260,12 @@ setInterval(updatePlayers, updateRate);
 function updateInfoBubbles() {
     const activeCountBubble = document.getElementById("active-count");
     const totalPlayersBubble = document.getElementById("total-count");
-    const totalMoneyBubble = document.getElementById("total-money");
 
     fetch("/api/players_misc")
         .then(response => response.json())
         .then(data => {
             activeCountBubble.innerHTML = data.active_players.toLocaleString();
             totalPlayersBubble.innerHTML = data.total_players.toLocaleString();
-            totalMoneyBubble.innerHTML = `$${data.total_money.toLocaleString()}`;
         });
 }
 updateInfoBubbles();
