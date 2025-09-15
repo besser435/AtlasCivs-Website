@@ -67,13 +67,6 @@ function formatDuration(ms) {
 }
 
 function getStatusText(playerObj) {
-    if (playerObj.name === "josamo8") {
-        const lastOnline = playerObj.last_online;
-        const timeNow = Date.now();
-        const durationSinceLastOnline = timeNow - lastOnline;
-        return `Banned ${formatDuration(durationSinceLastOnline)} ago`;
-    }
-
     if (playerObj.status === "online") {
         const onlineDuration = playerObj.online_duration;
         return `Online for ${formatDuration(onlineDuration)}`;
@@ -181,11 +174,6 @@ function addPlayerCard(playerObj) {
         case "offline":
             statusLight.setAttribute("data-state", "off");
             break;
-    }
-
-    if (playerObj.name === "josamo8") {
-        statusLight.setAttribute("data-state", "red");
-        statusLight.setAttribute("data-pulse", "true");
     }
 
     card.appendChild(playerDetails);

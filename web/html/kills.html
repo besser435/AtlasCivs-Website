@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Chat - AtlasCivs{% endblock %}
+{% block content %}
+
+<div class="header">
+    <h1>Kills</h1>
+    <input class="search" type="text" id="chat-search" autocomplete="off" spellcheck="false" placeholder="&#x1F50D; Search">
+</div>
+
+<div class="chat-feed">
+    <div class="search-not-found-msg" id="no-messages-found" style="display: none;">Your search did not match kills</div>
+</div>
+
+<div class="info-bubble-container">
+    <div class="info-bubble"><b><span id="kills-count" class="mono-font">000</span></b> Total kills logged</div>
+    <!-- <div class="separator"></div> -->
+
+    <button id="scroll-to-bottom" onclick="scrollToBottom()" style="display: none;">Scroll to recent</button>
+</div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=dns,login,logout,skull,trophy" />
+
+<link rel="stylesheet" type="text/css" href="/css/kills.css">
+<script src="/js/kills.js"></script>
+
+{% endblock %}

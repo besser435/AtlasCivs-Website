@@ -1,4 +1,8 @@
-/* Styles for the Chat page */
+/* Styles for the Kills page */
+/* 
+
+below is the old CSS for the chat page. THe kills page will look 
+different, but use some of the same design elements.
 
 .chat-feed {
     height: calc(100vh - 300px);
@@ -164,4 +168,4 @@
         width: 100%;
         word-break: break-word;
     }
-}
+} */

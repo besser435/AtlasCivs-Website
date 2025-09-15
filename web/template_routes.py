@@ -45,21 +45,13 @@ def home():
 def players():
     return render_template("/players.html")
 
-@template_routes.route("/chat")
+@template_routes.route("/kills")
 def chat():
-    return render_template("chat.html")
-
-@template_routes.route("/towns")
-def towns():
-    return render_template("towns.html")
+    return render_template("kills.html")
 
 @template_routes.route("/stats")
 def stats():
     return render_template("stats.html")
-
-@template_routes.route("/map")
-def map():
-    return render_template("map.html")
 
 @template_routes.route("/showcase")
 def showcase():
