@@ -15,10 +15,10 @@ sys.path.append("../")
 from diet_logger import setup_logger
 
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 LOG_FILE = "../logs/stats_updater.log"
-DB_FILE = "../db/stats.db"
-TAPI_URL = "https://tapi.toendallwars.org/api"
+DB_FILE = "../db/atlas_stats.db"
+API_URL = "https://ip1.realwizardhosting.online:7070/api"
     
 
 
@@ -77,13 +77,13 @@ if __name__ == "__main__":  # autism
         while True: 
             start_time = time.time()
 
-            response = requests.get(TAPI_URL + "/online_players")
+            response = requests.get(API_URL + "/online_players")
             if response.status_code == 200:
                 data = response.json()
                 online_players = data.get("online_players", {})
 
                 for uuid, player_data in online_players.items():
-                    stats_url = f"{TAPI_URL}/full_player_stats/{uuid}"
+                    stats_url = f"{API_URL}/full_player_stats/{uuid}"
                     stats_response = requests.get(stats_url, timeout=20)
 
                     if stats_response.status_code == 200:
@@ -95,7 +95,7 @@ if __name__ == "__main__":  # autism
                     else:
                         log.warning(f"Failed to fetch stats for {uuid}. HTTP {stats_response.status_code}")
             elif response.status_code == 502:
-                raise BadGatewayError("TAPI server returned 502 Bad Gateway. Is server offline or restarting?")
+                raise BadGatewayError("API server returned 502 Bad Gateway. Is server offline or restarting?")
             else:
                 log.warning(f"Failed to fetch online players. HTTP {response.status_code}")
 
@@ -107,9 +107,9 @@ if __name__ == "__main__":  # autism
     # This generally isn't a thing anymore, as its now behind Cloudflare. CF will return 502 instead of this throwing an error.
     # This still happens on occasion however, so we still catch it.
     except (BadGatewayError, requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout) as e:
-        # When TEAW restarts, it can rarely cause requests to not be able to reconnect
+        # When the server restarts, it can rarely cause requests to not be able to reconnect
         # This should restart the script and fix the issue, hopefully.
-        # We dont log the error, as its probably just TEAW restarting
+        # We dont log the error, as its probably just the server restarting
 
         log.info(f"Connection timed out. Restarting in 30s")
 

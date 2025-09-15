@@ -3,13 +3,13 @@ import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-TEAW_DB_FILE = "../db/teaw.db"
-STATS_DB_FILE = "../db/stats.db"
+DB_FILE = "../db/atlascivs.db"
+STATS_DB_FILE = "../db/atlas_stats.db"
 
 
 # what the fuck is database normalization
-def create_teaw_tables(db_file=TEAW_DB_FILE):
-    with sqlite3.connect(TEAW_DB_FILE) as conn:
+def create_general_tables(db_file=DB_FILE):
+    with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
 
         # Create players table
@@ -19,65 +19,23 @@ def create_teaw_tables(db_file=TEAW_DB_FILE):
                 name TEXT NOT NULL,
                 online_duration INTEGER,
                 afk_duration INTEGER,
-                balance REAL,
-                title TEXT,
-                town TEXT,           
-                town_name TEXT, 
-                nation TEXT,    
-                nation_name TEXT,              
-                last_online INTEGER     -- added by db_updater.py, not TAPI
+                bio TEXT, 
+                first_joined INTEGER,
+                last_online INTEGER     -- added by db_updater.py, not AC-API
             )
         """)
 
-        # Create chat table
+        # Create kills table
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS chat (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,  
-                sender TEXT NOT NULL,                  
-                sender_uuid TEXT,
-                message TEXT NOT NULL,                
-                timestamp INTEGER NOT NULL,
-                type TEXT NOT NULL
-            )
-        """)
-
-        # Create towns table
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS towns (
-                uuid TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                mayor TEXT NOT NULL,
-                founder TEXT NOT NULL,
-                balance REAL NOT NULL,
-                nation TEXT,
-                nation_name TEXT,
-                founded INTEGER NOT NULL,
-                resident_tax_percent REAL NOT NULL,
-                is_active BOOLEAN NOT NULL,
-                claimed_chunks INTEGER NOT NULL,
-                color_hex TEXT NOT NULL,
-                tag TEXT,
-                board TEXT, 
-                spawn_loc_x INTEGER NOT NULL,
-                spawn_loc_z INTEGER NOT NULL,
-                spawn_loc_y INTEGER NOT NULL
-            )
-        """)
-
-        # Create nations table
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS nations (
-                uuid TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                leader TEXT NOT NULL,
-                capitol_town TEXT NOT NULL,
-                capitol_town_name TEXT,
-                balance REAL NOT NULL,
-                town_tax_dollars REAL NOT NULL,
-                founded INTEGER NOT NULL,
-                color_hex TEXT NOT NULL,
-                tag TEXT,
-                board TEXT
+            CREATE TABLE IF NOT EXISTS kills (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                killer_uuid TEXT NOT NULL,
+                killer_name TEXT NOT NULL,
+                victim_uuid TEXT NOT NULL,
+                victim_name TEXT NOT NULL,
+                death_message TEXT,
+                weapon_json TEXT,                  -- store raw weapon JSON
+                timestamp INTEGER NOT NULL
             )
         """)
 
@@ -91,7 +49,7 @@ def create_teaw_tables(db_file=TEAW_DB_FILE):
 
         conn.commit()
 
-    print("TEAW database initialized")
+    print("General database initialized")
 
 
 def create_stats_tables(db_file=STATS_DB_FILE):
@@ -123,14 +81,14 @@ def drop_stats_table(db_file=STATS_DB_FILE, table=None):
     print(f"Dropped stats table: {table}")
 
 
-def drop_teaw_table(db_file=TEAW_DB_FILE, table=None):
-    with sqlite3.connect(TEAW_DB_FILE) as conn:
+def drop_general_table(db_file=DB_FILE, table=None):
+    with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
 
         cursor.execute(f"DROP TABLE IF EXISTS {table};")
         conn.commit()
 
-    print(f"Dropped TEAW table: {table}")
+    print(f"Dropped general table: {table}")
 
 
 def get_stat(player_uuid, category, stat_key):
@@ -145,33 +103,10 @@ def get_stat(player_uuid, category, stat_key):
 
         result = cursor.fetchone()
         return result[0] if result else None
-    
 
-def colon_three_leaderboard():
-    with sqlite3.connect(TEAW_DB_FILE) as conn:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT 
-                sender_uuid,
-                SUM(
-                    (LENGTH(message) - 
-                    LENGTH(REPLACE(LOWER(message), ':3', ''))) / 2
-                ) as total_count
-            FROM chat
-            WHERE sender_uuid IS NOT NULL
-            GROUP BY sender_uuid
-            HAVING total_count > 0
-            ORDER BY total_count DESC
-        """)
-
-        result = cursor.fetchall()
-        return result
 
 def insert_player(
-    uuid, name, online_duration=0, afk_duration=0, balance=0.0, 
-    title=None, town=None, town_name=None, nation=None, 
-    nation_name=None, last_online=None, db_file=TEAW_DB_FILE
+    uuid, name, online_duration=0, afk_duration=0, bio=None, last_online=None, db_file=DB_FILE
 ):
     
     with sqlite3.connect(db_file) as conn:
@@ -179,13 +114,11 @@ def insert_player(
 
         cursor.execute("""
             INSERT OR REPLACE INTO players (
-                uuid, name, online_duration, afk_duration, balance, title, 
-                town, town_name, nation, nation_name, last_online
+                uuid, name, online_duration, afk_duration, bio, last_online
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
         """, (
-            uuid, name, online_duration, afk_duration, balance, title, 
-            town, town_name, nation, nation_name, last_online
+            uuid, name, online_duration, afk_duration, bio, last_online
         ))
         
         conn.commit()
@@ -193,20 +126,9 @@ def insert_player(
     print(f"Inserted or updated player: {name} ({uuid})")
 
 
-# DB performance might get slow once we get in the hundreds of thousands range, as we often
-# do lookups on the chat table to prevent adding duplicates.
-# This will move the chat messages to an archive table, and delete the messages in the chat table.
-def archive_chat_table(db_file=TEAW_DB_FILE):
-    # Keep the 1000 most recent messages in the chat table, so that they can still be displayed in the frontend
-    pass
-
-
 
 if __name__ == "__main__":
-    #create_teaw_tables()
+    create_general_tables()
+    create_stats_tables()
 
-
-    # pretty print the colon three leaderboard
-    for i, (uuid, count) in enumerate(colon_three_leaderboard()):
-        print(f"{i + 1}. {uuid} - {count}")
-
+    pass
