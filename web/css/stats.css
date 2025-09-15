@@ -1,0 +1,124 @@
+.leaderboard {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 10px;
+    padding-bottom: 0px;
+    width: 500px;
+    margin-inline: auto;
+    overflow: hidden;
+}
+
+.stats-container {
+    min-height: 100px;
+}
+
+.stat-entry {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 5px 16px;
+    background-color: rgba(69, 69, 69, 0.4);
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Inter", sans-serif;
+    margin-right: 6px;
+}
+
+.stat-entry:first-child {
+    border-radius: 20px 20px 10px 10px;
+}
+
+.stat-entry:last-child {
+    border-radius: 10px 10px 20px 20px;
+}
+
+.stat-entry h3 {
+    font-size: 1.2em;
+}
+
+.leaderboard-header {
+    display: flex;
+    height: 27px;
+    align-items: center;
+}
+
+#stat-select {
+    margin-left: 0px;
+}
+
+#unit-label {
+    margin-left: auto;
+    margin-right: 10px;
+    color:rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+}
+
+/* move to wherever the horizontal one is */
+.vertical-separator {
+    min-height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    margin-top: 10px;
+}
+
+.stats-container {
+    overflow-y: scroll;
+    height: calc(100vh - 276px);
+    padding-block: 5px;
+}
+
+.player-rank {
+    width: 70px;
+    color: rgba(255, 255, 255, 0.85)
+}
+
+.player-face {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    image-rendering: pixelated;
+    margin-right: 10px;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.player-stat-value {
+    margin-left: auto;
+}
+
+@media (max-width: 950px) {
+    .leaderboard {
+        width: auto; 
+        margin-inline: unset;
+    }
+}
+
+@media (max-width: 550px) {
+    #unit-label {
+        font-size: 0.8em;
+        min-width: fit-content;
+        margin-left: auto;
+    }
+
+    #stat-select {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .player-rank {
+        width: 50px;
+    }
+
+    .player-face {
+        width: 28px;
+        height: 28px;
+    }
+
+    .stat-entry {
+        font-size: 0.9em;
+    }
+}

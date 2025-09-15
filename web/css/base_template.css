@@ -1,0 +1,423 @@
+/* Styles used on every page inheriting from the base template */
+
+
+/* All text styles */
+/* Do not use h4 or greater */
+h1, h2, h3 {
+    color: #FFFFFF;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    
+    margin: 0.3em 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2.6em;
+}
+
+h2 {
+    font-size: 2.2em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+p, li {
+    color: #cfcfcf;
+
+    font-family: "Inter", sans-serif;
+    font-style: normal;
+
+    font-size: 1.1em;
+
+    margin: 0.3em 0;
+}
+
+/* Body and background Image */
+body {
+    background-color: #0D150C;  /* Prevent flashbang before the actual background image loads */
+    background-image: url("/imgs/background_embedded.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    position: relative;
+
+    font-family: Arial, sans-serif; /* Default/fallback */
+
+    padding: 0px;
+    margin: 0px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fix layout shift during initial animations */
+@media (min-width: 900px) {
+    body {
+        animation: 2s linear 0s no-scroll;
+    }
+}
+
+body::before {
+    z-index: -5;
+}
+
+/* Navbar */
+nav {
+    padding: 1em 1em 0.5em 1em;
+    display: flex;
+    height: 50px;
+    justify-content: flex-start;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-image: linear-gradient(#000000ff, #00000077 75%, #00000000);
+    flex-wrap: nowrap;
+}
+
+nav::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    content: "";
+    z-index: -1;
+    height: 65px;
+    backdrop-filter: blur(10px);
+    mask: linear-gradient(0deg, transparent, black 50%);
+    background-color: rgba(25, 25, 25, 0.3);
+}
+
+nav a:not(.nav-logo):not(.menu-button), .header-button, select {
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(0, 0, 0, 0.2);
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+
+    transition: background-color 0.3s, outline 0.3s;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+
+    padding: 0.4em 0.8em;
+    border-radius: 10em;
+    margin-inline: 0.5em;
+    min-width: 70px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+
+    outline: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+button.header-button, select {
+    border: none;
+}
+
+nav a.active:not(.nav-logo):not(.menu-button), .header-button.active { 
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+nav a:not(.nav-logo):not(.menu-button):hover, .header-button:hover, select:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+select option, optgroup {
+    background-color: #000;
+    font-family: "Inter", sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: left;
+}
+
+nav a.nav-logo {
+    padding: 0;
+    border-radius: 0;
+    outline: none;
+    background: none;
+    margin-right: 20px;
+}
+
+nav a.nav-logo img {
+    transition: transform 100ms linear;
+}
+
+nav a.nav-logo:hover img {
+    transform: scale(1.1);
+}
+
+.menu-button {
+    color: white;
+    display: none;
+    position: absolute;
+    top: 20px;
+}
+
+
+/* Online Players Indicator */
+.online-players {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: auto;
+}
+
+.online-players h3 {
+    font-size: 1em;
+    margin-left: 12px;
+    color: rgba(255, 255, 255, 0.6)
+}
+
+@media (max-width: 1028px) {
+    .online-players h3 {
+        display: none;
+    }
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header h1 {
+    font-weight: 800;
+}
+
+.header h2 {
+    font-size: 1.8em;
+    padding-right: 8px;
+}
+
+.header h3 {
+    margin-right: 4px;
+}
+
+.separator {
+    width: 4px;
+    min-width: 4px;
+    height: 60%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    margin-inline: 20px;
+}
+
+
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 1em;
+    margin-bottom: auto;
+    animation: 1s cubic-bezier(0.19, 1, 0.22, 1) 0s slide-up;
+}
+
+
+
+@media (max-width: 900px) {
+    .header {
+        margin-bottom: 8px;
+    }
+    .header h1 {
+        font-size: 1.6em;
+    }
+
+    .header h2 {
+        /* Hacky way to remove the "Sort by:" text on mobile, but it works */
+        font-size: 1.1em;
+    }
+
+    .header h3 {
+        font-size: 1.0em;
+    }
+
+    .header .separator {
+        width: 1000px;
+        height: 0;
+    }
+
+    .separator {
+        display: flex;
+        margin-inline: 14px;
+        width: 3px;
+        min-width: 3px;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav {
+        height: fit-content;
+        flex-wrap: wrap;
+        justify-content: center;
+        flex-grow: 0;
+        position: fixed;
+        width: calc(100vw - 32px);
+        height: 50px;
+        overflow-y: hidden;
+        box-sizing: content-box;
+        gap: 0.6em;
+        transition: height 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    nav a:not(.nav-logo):not(.menu-button), .header-button {
+        margin-inline: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    nav a:not(.nav-logo):not(.menu-button) {
+        opacity: 0%;    /* Yes this is needed despite visibility: hidden. Its to animate so its smooth */
+        transform: translateY(-20px);
+        transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    select {
+        margin-inline: 0px;
+    }
+
+    .online-players {
+        display: flex;
+        order: -1;
+        margin-right: 30px;
+        margin-left: auto;
+    }
+
+    nav a.nav-logo {
+        margin: 0px;
+        scale: 0.8;
+        order: -2
+    }
+
+    nav::before {
+        height: 48px;
+    }
+
+    .menu-button {
+        display: block;
+        position: static;
+        margin-right: auto;
+        margin-left: 5px;
+        padding: 10px;
+        order: -3;
+        transition: 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    nav.nav-open {
+        background-image: linear-gradient(#000000aa, #000000aa);
+        height: 100%;
+        backdrop-filter: blur(10px);
+    }
+
+    nav.nav-open a:nth-child(n+3) {
+        opacity: 100%;
+        transform: translateY(0px);
+        pointer-events: auto;
+        visibility: visible;
+    }
+
+    nav.nav-open .menu-button {
+        transform: skewX(-20deg) scaleY(1.5);
+    }
+
+    #showcase-link {
+        margin-bottom: 2000px;
+    }
+
+    .main-content {
+        margin-top: 74px;
+        animation: 1s cubic-bezier(0.19, 1, 0.22, 1) 0s slide-up-mobile;    /* Disable slow scale animation on mobile */
+    }
+}
+
+
+
+/* Footer */
+/* Push the footer to the bottom if the page content doesn't fill up the screen */
+footer {
+    flex-shrink: 0;
+    margin: 10px 0px 0px;
+    height: 48px;
+    padding-inline: 15px;
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    background-image: linear-gradient(0deg, #00000055, #00000000);
+
+    color: #676767;
+}
+
+footer p {
+    font-size: 1em;
+    color: #676767;
+}
+
+.footer-links {
+    margin-top: 2px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+}
+
+.footer-links a {
+    color: #ffffff;
+    opacity: 50%;
+    transition: 700ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.footer-links a:hover {
+    opacity: 100%;
+    transform: scale(1.05);
+}
+
+.material-symbols-outlined {
+    font-size: 26px !important;
+}
+
+
+/* Scroll bars */
+/* Firefox */
+@-moz-document url-prefix() {  /* Might not work for forks of Firefox */
+    * {
+        scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0);
+        scrollbar-width: auto;
+    }
+}
+
+/* Webkit */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+*::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    background-clip: content-box;
+    border-radius: 2em;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,31 @@
+/* Styles for the Towns page */
+.color-pill {
+    display: inline-block;
+    width: 1.2em;
+    height: 80%;
+    margin: 12px;
+    margin-right: 15px;
+    border-radius: 2rem;
+    opacity: 60%;
+
+    border: 0.2em solid;
+}
+
+.card-container {
+    height: 125px;
+
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card-container:hover {
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
+    border-color: #007BFF;
+    cursor: pointer;
+}
+
+@media (max-width: 950px) {
+    .color-pill {
+        width: 0.8em;
+        margin-right: 10px;
+    }
+}

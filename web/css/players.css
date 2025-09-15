@@ -1,0 +1,24 @@
+/* Styles for exclusively the Players page */
+
+.card-container .player-skin {
+    width: 50px;
+    height: auto;
+    
+    position: relative;
+    top: 10px;
+    align-self: flex-start;
+
+    margin-left: 10px;
+    margin-right: 15px;
+}
+
+@media (max-width: 950px) {
+    .card-container .player-skin {
+        width: 30px;
+        margin-right: 10px;
+        top: 20px;
+
+        position: unset;
+        align-self: unset;
+    }
+}

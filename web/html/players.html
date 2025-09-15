@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Players - TEAW{% endblock %}
+{% block content %}
+
+<div class="header">
+    <h1>Players</h1>
+
+    <div class="separator"></div>
+    <h2>Sort by:</h2>
+    <select id="sort-select">
+        <option value="last_online">Last Online</option>
+        <option value="username">Username</option>
+    </select>
+
+    <input class="search" type="text" id="player-search" autocomplete="off" spellcheck="false" placeholder="&#x1F50D; Search">
+</div>
+
+<div class="container-grid">
+    <div class="search-not-found-msg" id="no-players-found" style="display: none;">Your search did not match any players</div>
+</div>
+
+<div class="info-bubble-container">
+    <div class="info-bubble" title="A player is considered active if they have logged on in the last 14 days.">
+        <b><span id="active-count" class="mono-font">00</span></b> Active players
+    </div>
+    <div class="info-bubble"><b><span id="total-count" class="mono-font">00</span></b> Total players</div>
+    <div class="separator"></div>
+    
+    <div class="info-bubble"><b><span id="total-money" class="mono-font">$000,000</span></b> Total money</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/css/players-towns_common.css">
+<link rel="stylesheet" type="text/css" href="/css/players.css">
+<script src="/js/players.js"></script>
+
+{% endblock %}
