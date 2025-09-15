@@ -2,7 +2,7 @@
 Welcome to the Git repo for the AtlasCivs website! Here is the place to find source code, post issues, and submit pull requests. 
 We gladly welcome community contributions, we just ask that you test them first. 
 
-
+This is a fork of [TEAW-Website](https://github.com/besser435/TEAW-Website). There may be inconsistancies because of this.
 
 ## TODO:
 - [ ] Improve tmux script
