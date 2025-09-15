@@ -48,7 +48,7 @@ function updateStatus() {
                 failureCount = 0;
             } else {
                 statusLight.dataset.state = "red";
-                const offlineMinutes = Math.max(data.last_players_update_age, data.last_chat_update_age);
+                const offlineMinutes = Math.max(data.last_players_update_age, data.last_kills_update_age);
                 lastUpdateMinsAgo = offlineMinutes
                 onlineCount.textContent = `Last update ${offlineMinutes}m ago`;
             }

@@ -34,7 +34,7 @@ def get_status():
             cursor.execute("""
                 SELECT variable, value
                 FROM variables
-                WHERE variable IN ('last_players_update', 'last_chat_update')
+                WHERE variable IN ('last_players_update', 'last_kills_update')
             """)
             result = dict(cursor.fetchall())
 
@@ -47,12 +47,12 @@ def get_status():
             online_players_count = cursor.fetchone()[0]
 
         last_players_update = int(result.get("last_players_update", 0))
-        last_chat_update = int(result.get("last_chat_update", 0))
+        last_kills_update = int(result.get("last_kills_update", 0))
 
         current_time = int(time.time()) * 1000
 
         players_update_age = (current_time - last_players_update) // 60000
-        chat_update_age = (current_time - last_chat_update) // 60000
+        chat_update_age = (current_time - last_kills_update) // 60000
 
         if players_update_age < 5 and chat_update_age < 5:  # NOTE THIS IS IN MINUTES!!!!
             status = "ok"
@@ -63,7 +63,7 @@ def get_status():
             "status": status,
             "online_players": online_players_count,
             "last_players_update_age": players_update_age,
-            "last_chat_update_age": chat_update_age,
+            "last_kills_update_age": chat_update_age,
         }, 200
     except Exception:
         log.error(f"Internal error getting `status`: {traceback.format_exc()}")
