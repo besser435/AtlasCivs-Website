@@ -41,3 +41,13 @@ In the future there will be a Bash script to automatically destroy an existing t
 required processes.
 
 (yes I know tmux is not a proper process management tool, but it works well)
+
+
+## Contributing
+This project happily accepts contributions. You can either open an [issue](https://github.com/besser435/AtlasCivs-Website/issues) for a 
+feature request or bug, or submit a pull request if you know how to do that.
+
+> [!IMPORTANT]
+> If you encounter a security related bug please let me know in a direct message. I can be found on the [AtlasCivs Discord](https://discord.gg/tZGNUPByjA) as besser.
+> If you are a player on AtlasCivs, I am happy to give you diamonds/netherite/resources for finding security related bugs.
+
