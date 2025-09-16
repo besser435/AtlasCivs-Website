@@ -16,7 +16,7 @@ def on_start():
     
     try:
         branch = "prod"
-        commits_url = f"https://api.github.com/repos/besser435/TEAW-Website/commits?per_page=1&sha={branch}"
+        commits_url = f"https://api.github.com/besser435/AtlasCivs-Website/commits?per_page=1&sha={branch}"
         
         response = requests.get(commits_url)
         response.raise_for_status()
