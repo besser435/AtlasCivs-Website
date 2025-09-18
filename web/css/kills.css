@@ -1,10 +1,10 @@
 /* Styles for the Kills page */
-/* 
 
-below is the old CSS for the chat page. THe kills page will look 
-different, but use some of the same design elements.
 
-.chat-feed {
+/* below is the old CSS for the chat page. The kills page will look 
+different, but use some of the same design elements. */
+
+.kill-feed {
     height: calc(100vh - 300px);
     min-height: 200px;
     overflow-y: scroll;
@@ -15,7 +15,7 @@ different, but use some of the same design elements.
     padding-top: 0px;
 }
 
-.message-container {
+/* .message-container {
     display: grid;
     grid-template-columns: 290px 1fr;
     gap: 0.5em;
@@ -52,7 +52,7 @@ different, but use some of the same design elements.
 .message-info .sender {
     font-weight: 800;
     margin: 0 8px 0 8px;
-}
+} */
 
 .message-container .timestamp {
     font-weight: 700;
@@ -62,36 +62,6 @@ different, but use some of the same design elements.
 
     display: flex;
     align-items: center;
-}
-
-.message-info[data-message-type="status"] {
-    background-color: rgba(0, 255, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.1);
-}
-
-.message-info[data-message-type="join"] {
-    background-color: rgba(0, 255, 0, 0.1);
-    border-color: rgba(0, 255, 0, 0.1);
-}
-
-.message-info[data-message-type="discord"] {
-    background-color: rgba(114, 137, 218, 0.2);
-    border-color: rgba(114, 137, 218, 0.2);
-}
-
-.message-info[data-message-type="quit"] {
-    background-color: rgba(255, 0, 0, 0.1);
-    border-color: rgba(255, 0, 0, 0.1);
-}
-
-.message-info[data-message-type="death"] {
-    background-color: rgba(100, 25, 255, 0.2);
-    border-color: rgba(100, 25, 255, 0.2);
-}
-
-.message-info[data-message-type="advancement"] {
-    background-color: rgba(255, 200, 0, 0.1);
-    border-color: rgba(255, 200, 0, 0.1);
 }
 
 #scroll-to-bottom {
@@ -118,17 +88,9 @@ different, but use some of the same design elements.
     background-color: #0056b3;
 }
 
-.material-symbols-rounded {
-    font-size: 20px;
-    font-variation-settings:
-    'FILL' 1,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 20
-}
 
 @media (max-width: 950px) {
-    .chat-feed {
+    .kill-feed {
         border-radius: 25px;
         padding-top: 5px;
     }
@@ -168,4 +130,4 @@ different, but use some of the same design elements.
         width: 100%;
         word-break: break-word;
     }
-} */
+}
