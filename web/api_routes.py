@@ -158,7 +158,7 @@ def get_players_misc():
 
 # Kills
 @api_routes.route("/api/kill_history")
-def get_chat_messages():
+def get_kill_history():
     try:
         oldest_kill_id = request.args.get("oldest_kill_id", type=int) # Unused for now
         newest_kill_id = request.args.get("newest_kill_id", type=int)

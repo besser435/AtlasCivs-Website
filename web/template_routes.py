@@ -46,7 +46,7 @@ def players():
     return render_template("/players.html")
 
 @template_routes.route("/kills")
-def chat():
+def kills():
     return render_template("kills.html")
 
 @template_routes.route("/stats")

@@ -1,6 +1,5 @@
 import os
 from flask import Flask
-from flask_cors import CORS
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,4 +27,4 @@ if __name__ == "__main__":
 
     # Run in debug mode if this file is being run.
     # Otherwise run `app` from a WSGI server.
-    app.run(debug=True, host=host_ip, port=1851)
+    app.run(debug=True, host=host_ip, port=1901)

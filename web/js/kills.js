@@ -222,6 +222,7 @@ function addKill(killObj) {
     weaponImg.className = "weapon-img";
     weaponImg.src = "imgs/enchanted_netherite_sword.gif";  // Placeholder until we implement weapon
     displayKillDiv.appendChild(weaponImg);
+    // can we pull the image from the MC wiki? are the file names standardized?
 
     const victimSkin = killObj.victim_skin_obj
     killerSkin.className = "player-skin victim-skin";
