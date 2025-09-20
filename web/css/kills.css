@@ -1,28 +1,208 @@
 /* Styles for the Kills page */
-
-
-/* below is the old CSS for the chat page. The kills page will look 
-different, but use some of the same design elements. */
-
 .kill-feed {
+    margin-bottom: 10px;
+
+    overflow-y: scroll;
     height: calc(100vh - 300px);
     min-height: 200px;
-    overflow-y: scroll;
-    margin-bottom: 10px;
+
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    border-radius: 28px;
+
     padding: 10px;
-    padding-top: 0px;
 }
 
 .kill-container {
-    display: grid;
-    grid-template-columns: 290px 1fr;
-    gap: 0.5em;
-    align-items: stretch;
-    font-family: "Inter", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto;
+    background-color: rgba(69, 69, 69, 0.4);
+    color: #fff;
+
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+
     margin-top: 10px;
-    color: #FFFFFF;
+    padding: 10px;
+}
+
+.kill {
+    gap: 2em;   /* TODO: make smaller on small screens */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: 0 auto;
+
+    overflow: hidden; /* Hide player skin overflow */
+}
+
+.weapon-img {
+    image-rendering: pixelated;
+    width: 80px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.player-skin {
+    width: 74px;
+    height: auto;
+
+    position: relative;
+    top: 30px;
+}
+
+.victim-skin {
+    filter: grayscale(0.9);
+}
+
+.kill-info {
+    text-align: center;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.timestamp {
+   color: rgba(255, 255, 255, 0.4);
+}
+
+.kill-container h2 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.death-message {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+#scroll-to-bottom {
+    color: white;
+    background-color: rgb(0, 76, 255);
+    text-align: center;
+
+    margin-inline: 0.25em;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    border: none ;
+    padding: 0.4em 0.8em;
+    border-radius: 10em;
+
+    cursor: pointer;
+    
+    transition: background-color 0.3s, outline 0.3s;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#scroll-to-bottom:hover {
+    background-color: #0056b3;
 }
 
 
+
+
+
+
+
+
+
+
+
+
+/* Old code below. The biggest difference was that it was left aligned. */
+
+/* .kill-feed {
+    margin-bottom: 10px;
+
+    overflow-y: scroll;
+    height: calc(100vh - 300px);
+    min-height: 200px;
+
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+
+    padding: 10px;
+}
+
+.kill-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto;
+    height: 200px;
+    background-color: rgba(69, 69, 69, 0.4);
+
+    color: #fff;
+
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+
+    margin-top: 10px;
+}
+
+.player-skin {
+    width: 74px;
+    height: auto;
+    
+    align-self: flex-start;
+
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.victim-skin {
+    filter: grayscale(0.9);
+}
+
+.kill-container h2 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.kill-container .weapon-img {
+    image-rendering: pixelated;
+    width: 80px;
+    height: auto;
+    
+    align-self: flex-start;
+}
+
+.death-message {
+    word-break: break-all;
+}
+
+#scroll-to-bottom {
+    color: white;
+    background-color: rgb(0, 76, 255);
+    text-align: center;
+
+    margin-inline: 0.25em;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    border: none ;
+    padding: 0.4em 0.8em;
+    border-radius: 10em;
+
+    cursor: pointer;
+    
+    transition: background-color 0.3s, outline 0.3s;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#scroll-to-bottom:hover {
+    background-color: #0056b3;
+} */

@@ -2,32 +2,26 @@
 let currentSearchTerm = "";
 function setupSearch() {
     const searchInput = document.getElementById("kill-search");
-    const noMessagesFound = document.getElementById("no-messages-found");
+    const noMessagesFound = document.getElementById("no-kills-found");
 
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.toLowerCase();
-        const messages = document.querySelectorAll(".message-container");
+        const kills = document.querySelectorAll(".kill-container");
 
         let found = false;
 
-        messages.forEach((message) => {
-            const sender = message.querySelector(".sender");
-            const messageText = message.querySelector(".message-text");
+        kills.forEach((message) => {
+            const messageText = message.querySelector(".death-message");
 
             // If search is empty, restore original text without the highlight spans
             if (!searchTerm) {
-                // Just setting the text content will remove all HTML tags
-                sender.textContent = sender.textContent;
                 messageText.textContent = messageText.textContent;
                 message.style.display = "flex";
                 found = true;
-            } else if (sender.textContent.toLowerCase().includes(searchTerm) || 
-                       messageText.textContent.toLowerCase().includes(searchTerm)) {
-
+            } else if (messageText.textContent.toLowerCase().includes(searchTerm)) {
                 message.style.display = "flex";
                 found = true;
 
-                highlightText(sender, searchTerm);
                 highlightText(messageText, searchTerm);
             } else {
                 message.style.display = "none";
@@ -50,6 +44,8 @@ function highlightText(element, searchTerm) {
     element.innerHTML = highlightedHTML;
 }
 
+
+// TODO: fix scroll issue. on load its not scrolled down all of the way.
 
 
 // --- SCROLLING ---
@@ -155,6 +151,29 @@ function formatEpochTime(epochTime) {
     return date.toISOString().split("T")[0];
 }
 
+function getWeaponImgObj(weapon_json) {
+    const weaponImg = document.createElement("img");
+    weaponImg.className = "weapon-img";
+    
+    const weaponData = JSON.parse(weapon_json);
+
+    const itemImg = `https://assets.mcasset.cloud/1.21.8/assets/minecraft/textures/item/${weaponData.type}.png`;
+    // if the above is 404, try blocks. if that is also 404, use a placeholder image. 
+    // if the type is air, use a more different placeholder image.
+
+    weaponImg.src = itemImg;
+
+    // Will use alt for tooltip later, so we make it pretty here
+    weaponImg.alt = weaponData.type
+        .replace(/_/g, " ")
+        .split(" ")
+        .map(word => word[0].toUpperCase() + word.slice(1))
+        .join(" ");
+
+    return weaponImg;
+}
+
+// --- PLACEHOLDER KILLS ---
 // function onLoadAddFakeMessages() {   // Takes a while to populate the cards, so add some placeholders on page load
 //     const messageFeed = document.querySelector(".kill-feed");
 
@@ -200,6 +219,8 @@ function formatEpochTime(epochTime) {
 
 
 // --- MESSAGE UPDATES ---
+
+// --- KILLS ---
 function addKill(killObj) {
     const killFeed = document.getElementsByClassName("kill-feed");  // Main kill container
 
@@ -207,6 +228,7 @@ function addKill(killObj) {
     let killContainer = document.createElement("div");
     killContainer.className = "kill-container";
     killContainer.id = killObj.id;
+
 
     // Create kill div
     // Horrible name. It only contains the skins and weapon img.
@@ -217,22 +239,16 @@ function addKill(killObj) {
     killerSkin.className = "player-skin killer-skin";
     displayKillDiv.appendChild(killerSkin);
 
-    //const weaponImg = killObj.weapon_img;  // Not implemented yet
-    const weaponImg = document.createElement("img");
-    weaponImg.className = "weapon-img";
-    weaponImg.src = "imgs/enchanted_netherite_sword.gif";  // Placeholder until we implement weapon
+    const weaponImg = getWeaponImgObj(killObj.weapon_json);
     displayKillDiv.appendChild(weaponImg);
     // can we pull the image from the MC wiki? are the file names standardized?
 
     const victimSkin = killObj.victim_skin_obj
-    killerSkin.className = "player-skin victim-skin";
+    victimSkin.className = "player-skin victim-skin";
     displayKillDiv.appendChild(victimSkin);
     
     // Add kill to main container
     killContainer.appendChild(displayKillDiv);
-
-
-
 
 
     // Create kill info div
@@ -240,13 +256,13 @@ function addKill(killObj) {
     killInfoDiv.className = "kill-info";
 
     // Death message
-    const killText = document.createElement("div");
-    killText.className = "kill-text";
-    killText.innerHTML = killObj.death_message;
-    killInfoDiv.appendChild(killText);
+    const deathMessage = document.createElement("h2");
+    deathMessage.className = "death-message";
+    deathMessage.innerHTML = killObj.death_message;
+    killInfoDiv.appendChild(deathMessage);
 
     // Add timestamp
-    let timestamp = document.createElement("div");
+    let timestamp = document.createElement("p");
     timestamp.className = "timestamp";
     timestamp.innerHTML = killObj.formatted_timestamp;
     timestamp.title = new Date(killObj.epoch_timestamp).toLocaleString();
@@ -329,6 +345,9 @@ function getNewKills() {
 getNewKills();
 setInterval(getNewKills, updateRate);
 
+
+
+// --- CONTENT UPDATES ---
 function updateMessageTimestamps() {
     // Once messages are added, their timestamps are not magically updated.
     // This fixes that. 
