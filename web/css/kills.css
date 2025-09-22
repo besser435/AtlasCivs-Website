@@ -25,7 +25,7 @@
     border-radius: 18px;
     overflow: hidden;
 
-    margin-top: 10px;
+    margin-bottom: 10px;
     padding: 10px;
 }
 
@@ -84,7 +84,7 @@
     word-break: break-word;
 }
 
-#scroll-to-bottom {
+#scroll-to-top {
     color: white;
     background-color: rgb(0, 76, 255);
     text-align: center;

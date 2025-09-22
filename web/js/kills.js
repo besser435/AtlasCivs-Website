@@ -31,7 +31,7 @@ function setupSearch() {
 
         noMessagesFound.style.display = found ? "none" : "block";
 
-        scrollToBottom();
+        scrollToTop();
     });
 }
 window.addEventListener("load", setupSearch);
@@ -50,28 +50,29 @@ function highlightText(element, searchTerm) {
 
 // --- SCROLLING ---
 let autoScrollEnabled = true;
-function scrollToBottom() {
+function scrollToTop() {
     const killFeed = document.querySelector(".kill-feed");
-    killFeed.scrollTop = killFeed.scrollHeight;
+    killFeed.scrollTop = 0;
 }
 
 function handleScroll() {
     const killFeed = document.querySelector(".kill-feed");
-    const scrollToBottomButton = document.getElementById("scroll-to-bottom");
+    const scrollToTopButton = document.getElementById("scroll-to-top"); 
 
     if (!killFeed) return;
 
-    const isAtBottom = Math.abs(killFeed.scrollHeight - killFeed.scrollTop - killFeed.clientHeight) < 5;
+    // Check if user is near the top
+    const isAtTop = killFeed.scrollTop <= 5;
 
-    if (isAtBottom) {
+    if (isAtTop) {
         autoScrollEnabled = true;
-        if (scrollToBottomButton) {
-            scrollToBottomButton.style.display = "none";
+        if (scrollToTopButton) {
+            scrollToTopButton.style.display = "none";
         }
     } else {
         autoScrollEnabled = false;
-        if (scrollToBottomButton) {
-            scrollToBottomButton.style.display = "block";
+        if (scrollToTopButton) {
+            scrollToTopButton.style.display = "block";
         }
     }
 }
@@ -139,12 +140,16 @@ function formatEpochTime(epochTime) {
 
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     if (diffInMinutes < 60) {
-        return `${diffInMinutes}m`;
+        return diffInMinutes === 1
+            ? "1 minute ago"
+            : `${diffInMinutes} minutes ago`;
     }
 
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) {
-        return `${diffInHours}h`;
+        return diffInHours === 1
+            ? "1 hour ago"
+            : `${diffInHours} hours ago`;
     }
 
     const date = new Date(epochTime);
@@ -174,45 +179,62 @@ function getWeaponImgObj(weapon_json) {
 }
 
 // --- PLACEHOLDER KILLS ---
-// function onLoadAddFakeMessages() {   // Takes a while to populate the cards, so add some placeholders on page load
-//     const messageFeed = document.querySelector(".kill-feed");
+// function onLoadAddFakeMessages() {
+//     const killFeed = document.getElementsByClassName("kill-feed");  // Main kill container
 
-//     // Message container
-//     const fakeMessage = document.createElement("div");
-//     fakeMessage.style.display = "flex";
-//     fakeMessage.className = "message-container";
+//     // Create the main kill container
+//     let FakeKillContainer = document.createElement("div");
+//     FakeKillContainer.className = "kill-container";
+//     FakeKillContainer.id = "placeholder-kill-1";
+    
+//     // Create kill div
+//     // Horrible name. It only contains the skins and weapon img.
+//     let displayKillDiv = document.createElement("div");
+//     displayKillDiv.className = "kill";
 
-//     // Info container
-//     const fakeMessageInfo = document.createElement("div");
-//     fakeMessageInfo.className = "message-info";
-//     fakeMessageInfo.setAttribute("data-message-type", "kill");
-//     fakeMessage.appendChild(fakeMessageInfo);
+//     const killerSkin = document.createElement("img");
+//     killerSkin.className = "player-skin killer-skin";
+//     displayKillDiv.appendChild(killerSkin);
 
-//     // Sender
-//     const fakeSender = document.createElement("div");
-//     fakeSender.className = "sender";
-//     fakeSender.innerHTML = "⠀⠀⠀⠀⠀⠀";
-//     fakeMessageInfo.appendChild(fakeSender);
+//     const weaponImg = document.createElement("img");
+//     displayKillDiv.appendChild(weaponImg);
+//     //can we pull the image from the MC wiki? are the file names standardized?
 
-//     // PFP
-//     const fakeProfilePic = document.createElement("img");
-//     fakeProfilePic.className = "profile-pic";
-
-//     fakeProfilePic.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='grey'/%3E%3C/svg%3E";
-//     fakeMessageInfo.appendChild(fakeProfilePic);
-
-//     // Message text
-//     const fakeMessageText = document.createElement("div");
-//     fakeMessageText.className = "message-text";
-//     fakeMessageText.innerHTML = "⠀";
-//     fakeMessage.appendChild(fakeMessageText);
+//     const victimSkin = document.createElement("img");
+//     victimSkin.className = "player-skin victim-skin";
+//     displayKillDiv.appendChild(victimSkin);
+    
+//     // Add kill to main container
+//     FakeKillContainer.appendChild(displayKillDiv);
 
 
+//     // Create kill info div
+//     let killInfoDiv = document.createElement("div");
+//     killInfoDiv.className = "kill-info";
+
+//     // Death message
+//     const deathMessage = document.createElement("h2");
+//     deathMessage.className = "death-message";
+//     deathMessage.innerHTML = "died";
+//     killInfoDiv.appendChild(deathMessage);
+
+//     // Add timestamp
+//     let timestamp = document.createElement("p");
+//     timestamp.className = "timestamp";
+//     timestamp.innerHTML = "now";
+//     killInfoDiv.appendChild(timestamp);
+
+//     // Add kill info to main container
+//     FakeKillContainer.appendChild(killInfoDiv);
+    
+    
 //     for (let i = 0; i < 50; i++) {
-//         messageFeed.appendChild(fakeMessage.cloneNode(true));
+//         killFeed[0].appendChild(FakeKillContainer.cloneNode(true));
 //     }
-
-//     scrollToBottom();
+   
+//     if (autoScrollEnabled) {
+//         scrollToTop();
+//     }
 // }
 // onLoadAddFakeMessages();
 
@@ -271,31 +293,13 @@ function addKill(killObj) {
 
     // Add kill info to main container
     killContainer.appendChild(killInfoDiv);
-
-
-
-    // Package up the kill info
-    // const killContainer = document.createElement("div");
-    // killContainer.className = "kill-container";
-    // killContainer.id = killObj.id;
-
-    // if (currentSearchTerm !== "") {
-    //     killContainer.style.display = "none";
-    // } else {
-    //     killContainer.style.display = "flex";
-    // }
-
-    // // Add the elements to the container
-    // killContainer.appendChild(displayKillDiv);
-
     
-
     // NOTE: if we add the ability to fetch older messages, we can't just append to the top
-    killFeed[0].appendChild(killContainer);
+    killFeed[0].insertBefore(killContainer, killFeed[0].firstChild);
 
 
     if (autoScrollEnabled) {
-        scrollToBottom();
+        scrollToTop();
     }
 }
 
@@ -333,7 +337,7 @@ function getNewKills() {
             });
     } else {    // Standard update, get kills newer than the most recent kill  (limited to 50 kills) 
         const kills = document.getElementsByClassName("kill-container");
-        const newestKillID = kills[kills.length - 1]?.id;
+        const newestKillID = kills.length > 0 ? kills[0].id : 0;
 
         fetch(`/api/kill_history?newest_kill_id=${newestKillID}`)
             .then(response => response.json())
