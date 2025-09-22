@@ -27,6 +27,10 @@
 
     margin-bottom: 10px;
     padding: 10px;
+
+    height: 190px;  
+    /* Fixed height so scroll down on load works. debug save me, redo this 
+    to allow for a real fixed height. this is all wrong */
 }
 
 .kill {
@@ -69,6 +73,7 @@
 
 .timestamp {
    color: rgba(255, 255, 255, 0.4);
+   margin-bottom: 0px;
 }
 
 .kill-container h2 {

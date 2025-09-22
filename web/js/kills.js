@@ -178,69 +178,72 @@ function getWeaponImgObj(weapon_json) {
     return weaponImg;
 }
 
+
+
 // --- PLACEHOLDER KILLS ---
-// function onLoadAddFakeMessages() {
-//     const killFeed = document.getElementsByClassName("kill-feed");  // Main kill container
+// On load, add a bunch of fake kills to prevent an empty screen. 
+// On slow connections it can take a while to load the real kills.
+function onLoadAddFakeMessages() {
+    const killFeed = document.getElementsByClassName("kill-feed");  // Main kill container
 
-//     // Create the main kill container
-//     let FakeKillContainer = document.createElement("div");
-//     FakeKillContainer.className = "kill-container";
-//     FakeKillContainer.id = "placeholder-kill-1";
+    // Create the main kill container
+    let FakeKillContainer = document.createElement("div");
+    FakeKillContainer.className = "kill-container";
+    FakeKillContainer.id = "placeholder-kill";
     
-//     // Create kill div
-//     // Horrible name. It only contains the skins and weapon img.
-//     let displayKillDiv = document.createElement("div");
-//     displayKillDiv.className = "kill";
+    // Create kill div
+    // Horrible name. It only contains the skins and weapon img.
+    let displayKillDiv = document.createElement("div");
+    displayKillDiv.className = "kill";
 
-//     const killerSkin = document.createElement("img");
-//     killerSkin.className = "player-skin killer-skin";
-//     displayKillDiv.appendChild(killerSkin);
+    const killerSkin = document.createElement("img");
+    //killerSkin.src = "";    // TODO: SVG placeholder. copy and modify from chat page, then bring that over to players page too.
+    killerSkin.className = "player-skin killer-skin";
+    displayKillDiv.appendChild(killerSkin);
 
-//     const weaponImg = document.createElement("img");
-//     displayKillDiv.appendChild(weaponImg);
-//     //can we pull the image from the MC wiki? are the file names standardized?
+    const weaponImg = document.createElement("img");
+    displayKillDiv.appendChild(weaponImg);
 
-//     const victimSkin = document.createElement("img");
-//     victimSkin.className = "player-skin victim-skin";
-//     displayKillDiv.appendChild(victimSkin);
+    const victimSkin = document.createElement("img");
+    //victimSkin.src = "";    // TODO: SVG placeholder. copy and modify from chat page, then bring that over to players page too.
+    victimSkin.className = "player-skin victim-skin";
+    displayKillDiv.appendChild(victimSkin);
     
-//     // Add kill to main container
-//     FakeKillContainer.appendChild(displayKillDiv);
+    // Add kill to main container
+    FakeKillContainer.appendChild(displayKillDiv);
 
 
-//     // Create kill info div
-//     let killInfoDiv = document.createElement("div");
-//     killInfoDiv.className = "kill-info";
+    // Create kill info div
+    let killInfoDiv = document.createElement("div");
+    killInfoDiv.className = "kill-info";
 
-//     // Death message
-//     const deathMessage = document.createElement("h2");
-//     deathMessage.className = "death-message";
-//     deathMessage.innerHTML = "died";
-//     killInfoDiv.appendChild(deathMessage);
+    // Death message
+    const deathMessage = document.createElement("h2");
+    deathMessage.className = "death-message";
+    deathMessage.innerHTML = "⠀⠀⠀⠀⠀⠀";
+    killInfoDiv.appendChild(deathMessage);
 
-//     // Add timestamp
-//     let timestamp = document.createElement("p");
-//     timestamp.className = "timestamp";
-//     timestamp.innerHTML = "now";
-//     killInfoDiv.appendChild(timestamp);
+    // Add timestamp
+    let timestamp = document.createElement("p");
+    timestamp.className = "timestamp";
+    timestamp.innerHTML = "⠀⠀⠀⠀⠀⠀";
+    killInfoDiv.appendChild(timestamp);
 
-//     // Add kill info to main container
-//     FakeKillContainer.appendChild(killInfoDiv);
+    // Add kill info to main container
+    FakeKillContainer.appendChild(killInfoDiv);
     
     
-//     for (let i = 0; i < 50; i++) {
-//         killFeed[0].appendChild(FakeKillContainer.cloneNode(true));
-//     }
+    for (let i = 0; i < 50; i++) {
+        killFeed[0].appendChild(FakeKillContainer.cloneNode(true));
+    }
    
-//     if (autoScrollEnabled) {
-//         scrollToTop();
-//     }
-// }
-// onLoadAddFakeMessages();
+    if (autoScrollEnabled) {
+        scrollToTop();
+    }
+}
+onLoadAddFakeMessages();
 
 
-
-// --- MESSAGE UPDATES ---
 
 // --- KILLS ---
 function addKill(killObj) {
