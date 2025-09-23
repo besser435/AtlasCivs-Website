@@ -60,7 +60,7 @@
 }
 
 .card-container .player-skin {
-    width: 50px;
+    width: 56px;
     height: auto;
     
     position: relative;
@@ -68,7 +68,7 @@
     align-self: flex-start;
 
     margin-left: 10px;
-    margin-right: 15px;
+    margin-right: 12px;
 }
 
 @media (max-width: 950px) {
