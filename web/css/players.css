@@ -71,10 +71,19 @@
     margin-right: 12px;
 }
 
+.bio-info {
+    margin-left: auto;
+    font-size: 0.9em;
+}
+
 @media (max-width: 950px) {
     .container-grid {
         padding: 8px;
         padding-right: 11px;
+    }
+
+    .card-container {
+        height: 106px;
     }
 
     .card-container h2 {
@@ -88,5 +97,9 @@
 
         position: unset;
         align-self: unset;
+    }
+
+    .bio-info {
+        margin-left: 0;
     }
 }
