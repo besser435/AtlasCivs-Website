@@ -45,8 +45,6 @@ function highlightText(element, searchTerm) {
 }
 
 
-// TODO: fix scroll issue. on load its not scrolled down all of the way.
-
 
 // --- SCROLLING ---
 let autoScrollEnabled = true;
@@ -183,7 +181,7 @@ function getWeaponImgObj(weapon_json) {
 // --- PLACEHOLDER KILLS ---
 // On load, add a bunch of fake kills to prevent an empty screen. 
 // On slow connections it can take a while to load the real kills.
-function onLoadAddFakeMessages() {
+function onLoadAddFakeKills() {
     const killFeed = document.getElementsByClassName("kill-feed");  // Main kill container
 
     // Create the main kill container
@@ -197,7 +195,8 @@ function onLoadAddFakeMessages() {
     displayKillDiv.className = "kill";
 
     const killerSkin = document.createElement("img");
-    //killerSkin.src = "";    // TODO: SVG placeholder. copy and modify from chat page, then bring that over to players page too.
+    killerSkin.src = 
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='72'><rect width='100%' height='100%' fill='rgba(255,255,255,0.1)' /></svg>";
     killerSkin.className = "player-skin killer-skin";
     displayKillDiv.appendChild(killerSkin);
 
@@ -205,7 +204,8 @@ function onLoadAddFakeMessages() {
     displayKillDiv.appendChild(weaponImg);
 
     const victimSkin = document.createElement("img");
-    //victimSkin.src = "";    // TODO: SVG placeholder. copy and modify from chat page, then bring that over to players page too.
+    victimSkin.src = 
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='72'><rect width='100%' height='100%' fill='rgba(255,255,255,0.1)' /></svg>";
     victimSkin.className = "player-skin victim-skin";
     displayKillDiv.appendChild(victimSkin);
     
@@ -241,7 +241,7 @@ function onLoadAddFakeMessages() {
         scrollToTop();
     }
 }
-onLoadAddFakeMessages();
+onLoadAddFakeKills();
 
 
 
