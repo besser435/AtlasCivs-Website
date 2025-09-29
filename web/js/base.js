@@ -4,6 +4,7 @@ const pageMappings = {
     '/players': 'players-link',
     '/kills': 'kills-link',
     '/stats': 'stats-link',
+    '/map': 'map-link',
     '/showcase': 'showcase-link',
     '/showcase/submit': 'showcase-link'
 };
