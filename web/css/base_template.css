@@ -37,10 +37,18 @@ p, li {
     margin: 0.3em 0;
 }
 
+code {
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-weight: bold;
+    background-color: rgba(50, 50, 50, 0.8);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
 /* Body and background Image */
 body {
     background-color: #0D150C;  /* Prevent flashbang before the actual background image loads */
-    background-image: url("/imgs/background_embedded.png");
+    background-image: url("/imgs/bluemap_embedded.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

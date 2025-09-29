@@ -53,6 +53,10 @@ def kills():
 def stats():
     return render_template("stats.html")
 
+@template_routes.route("/map")
+def map():
+    return render_template("map.html")
+
 @template_routes.route("/showcase")
 def showcase():
     return render_template("showcase.html")
