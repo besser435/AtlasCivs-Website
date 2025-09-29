@@ -159,19 +159,24 @@ function getWeaponImgObj(weapon_json) {
     weaponImg.className = "weapon-img";
     
     const weaponData = JSON.parse(weapon_json);
-
     const itemImg = `https://assets.mcasset.cloud/1.21.8/assets/minecraft/textures/item/${weaponData.type}.png`;
-    // if the above is 404, try blocks. if that is also 404, use a placeholder image. 
-    // if the type is air, use a more different placeholder image.
 
-    weaponImg.src = itemImg;
+    const placeholder =     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>';
+    const airPlaceholder =  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>';
+    // Change air image later to something like a fist
 
-    // Will use alt for tooltip later, so we make it pretty here
-    weaponImg.alt = weaponData.type
-        .replace(/_/g, " ")
-        .split(" ")
-        .map(word => word[0].toUpperCase() + word.slice(1))
-        .join(" ");
+    weaponImg.src = (weaponData.type === "air") ? airPlaceholder : itemImg;
+    weaponImg.alt = formatItemName(weaponData.type);
+
+    // Fallback
+    weaponImg.onerror = () => {
+        weaponImg.src = (weaponData.type === "air") ? airPlaceholder : placeholder;
+    };
+
+    // Tooltip events
+    weaponImg.addEventListener("mouseenter", (e) => showTooltip(e, weaponData));
+    weaponImg.addEventListener("mousemove", moveTooltip);
+    weaponImg.addEventListener("mouseleave", hideTooltip);
 
     return weaponImg;
 }
@@ -389,3 +394,78 @@ function updateInfoBubbles() {
 }
 updateInfoBubbles();
 setInterval(updateInfoBubbles, updateRate);
+
+
+
+// --- WEAPON TOOLTIPS ---
+let tooltipDiv;
+function createTooltip() {
+    tooltipDiv = document.createElement("div");
+    tooltipDiv.style.display = "none";
+    tooltipDiv.className = "weapon-tooltip";
+    document.body.appendChild(tooltipDiv);
+}
+
+function showTooltip(event, weaponData) {
+    let content = "";
+
+    const hasCustomName = !!weaponData.name;
+
+    // Custom name with fallback to item name
+    if (hasCustomName) {
+        content += `<div class="tooltip-title custom-name">${weaponData.name}</div>`;
+    } else {
+        content += `<div class="tooltip-title">${formatItemName(weaponData.type)}</div>`;
+    }
+
+    // Enchantments
+    if (weaponData.enchantments && weaponData.enchantments.length > 0) {
+        for (const enchant of weaponData.enchantments) {
+            content += `<div class="tooltip-enchant">${formatEnchant(enchant)}</div>`;
+        }
+    }
+
+    // If custom name exists, show vanilla item name at bottom
+    if (hasCustomName) {
+        content += `<div class="tooltip-item">${formatItemName(weaponData.type)}</div>`;
+    }
+
+    tooltipDiv.innerHTML = content;
+    tooltipDiv.style.display = "block";
+    moveTooltip(event);
+}
+
+function moveTooltip(event) {
+    const padding = 12;
+    tooltipDiv.style.left = event.pageX + padding + "px";
+    tooltipDiv.style.top = event.pageY + padding + "px";
+}
+
+// --- Format helpers ---
+function formatItemName(type) {
+    return type.replace(/_/g, " ")
+               .split(" ")
+               .map(w => w[0].toUpperCase() + w.slice(1))
+               .join(" ");
+}
+
+function formatEnchant(enchant) {
+    const name = enchant.id.replace(/^minecraft:/, "")
+                           .replace(/_/g, " ")
+                           .split(" ")
+                           .map(w => w[0].toUpperCase() + w.slice(1))
+                           .join(" ");
+    return `${name} ${toRoman(enchant.level)}`;
+}
+
+function toRoman(num) {
+    const numerals = ["", "I", "II", "III", "IV", "V"];
+    return numerals[num] ?? "";
+}
+
+function hideTooltip() {
+    tooltipDiv.style.display = "none";
+}
+
+// Initialize tooltip div
+window.addEventListener("load", createTooltip);
