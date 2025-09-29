@@ -1,23 +1,22 @@
 /* Styles for the Kills page */
 .kill-feed {
     margin-bottom: 10px;
-
     overflow-y: scroll;
     height: calc(100vh - 300px);
     min-height: 200px;
 
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 28px;
-
     padding: 10px;
 }
 
 .kill-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: auto;
+
     background-color: rgba(69, 69, 69, 0.4);
     color: #fff;
 
@@ -26,24 +25,21 @@
     overflow: hidden;
 
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 12px 12px;
 }
 
 .kill {
-    gap: 2em;
-
     display: flex;
     align-items: center;
     justify-content: center;
-    width: fit-content;
-    margin: 0 auto;
-
-    overflow: hidden;
+    gap: 2em;
+    flex: 0 0 auto;
+    margin: 0;
 }
 
 .weapon-img {
     image-rendering: pixelated;
-    width: 80px;
+    width: 62px;
     height: auto;
     display: block;
     margin: 0 auto;
@@ -55,32 +51,31 @@
     object-fit: cover;
     object-position: top;
 
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%);
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
 }
-
 
 .victim-skin {
     filter: grayscale(0.9);
 }
 
 .kill-info {
-    text-align: center;
-    width: 100%;
-    margin-top: 6px;
+    flex: 1;
+    text-align: left;
+    margin-left: 20px;
 }
 
 .timestamp {
     color: rgba(255, 255, 255, 0.4);
-    margin-bottom: 0px;
     font-weight: 700;
-    font-size: 1.0em;
+    font-size: 1em;
+    margin-bottom: 0;
 }
 
 .kill-container h2 {
     margin: 0;
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
 }
 
@@ -94,16 +89,14 @@
     text-align: center;
 
     margin-inline: 0.25em;
-
     font-family: "Inter", sans-serif;
     font-weight: 700;
-    text-decoration: none;
-    border: none ;
+
+    border: none;
     padding: 0.4em 0.8em;
     border-radius: 10em;
-
     cursor: pointer;
-    
+
     transition: background-color 0.3s, outline 0.3s;
     transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 }
@@ -112,13 +105,59 @@
     background-color: #0056b3;
 }
 
+.add-info {
+    margin-left: auto;
+    font-size: 0.9em;
+}
+
+.weapon-tooltip { 
+    position: absolute;
+    background: rgba(16, 0, 16, 0.9);
+    color: white;
+    font-family: "Minecraftia"; 
+    font-size: 18px;
+    padding: 8px 10px;
+    border: 2px solid rgba(59, 0, 192, 0.8);
+    border-radius: 6px;
+    z-index: 9999;
+    pointer-events: none;
+    max-width: 240px;
+    line-height: 1.4;
+}
+
+.weapon-tooltip .custom-name {
+    font-weight: bold;
+    color: #55FFFF;
+    margin-bottom: 4px;
+    font-style: italic;
+}
+
+.weapon-tooltip .tooltip-enchant {
+    color: #AAA;
+}
+
+.weapon-tooltip .tooltip-item {
+    color: #6c6c6c;
+    margin-top: 4px;
+}
+
+
 @media (max-width: 950px) {
-    .kill-feed {
-        padding: 8px;
+    .kill-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 10px;
+    }
+
+    .kill-info {
+        text-align: center;
+        margin-left: 0;
+        margin-top: 6px;
     }
 
     .kill-container h2 {
-        font-size: 1.0em;
+        font-size: 1em;
     }
 
     .player-skin {
@@ -127,7 +166,7 @@
     }
 
     .weapon-img {
-        width: 48px;
+        width: 44px;
     }
 
     .timestamp {
