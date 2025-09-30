@@ -150,8 +150,7 @@ function formatEpochTime(epochTime) {
             : `${diffInHours} hours ago`;
     }
 
-    const date = new Date(epochTime);
-    return date.toISOString().split("T")[0];
+    return new Date(epochTime).toLocaleDateString()
 }
 
 function getWeaponImgObj(weapon_json) {
@@ -203,15 +202,21 @@ function onLoadAddFakeKills() {
     killerSkin.src = 
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='72'><rect width='100%' height='100%' fill='rgba(255,255,255,0.1)' /></svg>";
     killerSkin.className = "player-skin killer-skin";
+    killerSkin.style = "border-radius: 6px; mask-image: none;";
     displayKillDiv.appendChild(killerSkin);
 
     const weaponImg = document.createElement("img");
+    weaponImg.src = 
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect width='100%' height='100%' fill='rgba(255,255,255,0.1)' /></svg>";
+        weaponImg.className = "weapon-img";
+    weaponImg.style = "border-radius: 6px";
     displayKillDiv.appendChild(weaponImg);
 
     const victimSkin = document.createElement("img");
     victimSkin.src = 
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='72'><rect width='100%' height='100%' fill='rgba(255,255,255,0.1)' /></svg>";
     victimSkin.className = "player-skin victim-skin";
+    victimSkin.style = "border-radius: 6px; mask-image: none;";
     displayKillDiv.appendChild(victimSkin);
     
     // Add kill to main container
@@ -225,13 +230,13 @@ function onLoadAddFakeKills() {
     // Death message
     const deathMessage = document.createElement("h2");
     deathMessage.className = "death-message";
-    deathMessage.innerHTML = "⠀⠀⠀⠀⠀⠀";
+    deathMessage.innerHTML = "&nbsp;";
     killInfoDiv.appendChild(deathMessage);
 
     // Add timestamp
     let timestamp = document.createElement("p");
     timestamp.className = "timestamp";
-    timestamp.innerHTML = "⠀⠀⠀⠀⠀⠀";
+    timestamp.innerHTML = "&nbsp;";
     killInfoDiv.appendChild(timestamp);
 
     // Add kill info to main container
@@ -271,7 +276,6 @@ function addKill(killObj) {
 
     const weaponImg = getWeaponImgObj(killObj.weapon_json);
     displayKillDiv.appendChild(weaponImg);
-    // can we pull the image from the MC wiki? are the file names standardized?
 
     const victimSkin = killObj.victim_skin_obj
     victimSkin.className = "player-skin victim-skin";
