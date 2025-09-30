@@ -59,7 +59,7 @@ function updateStatus() {
 
             const statusLight = document.getElementById("nav-status-light");
             // Sometimes the browser puts the tab to sleep or the network is unstable, so we give it a few chances
-            if (failureCount > 5) {
+            if (failureCount > 3) {
                 statusLight.dataset.state = "red";
                 
                 const onlineCount = document.getElementById("online-count");
