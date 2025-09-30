@@ -150,8 +150,7 @@ function formatEpochTime(epochTime) {
             : `${diffInHours} hours ago`;
     }
 
-    const date = new Date(epochTime);
-    return date.toISOString().split("T")[0];
+    return new Date(epochTime).toLocaleDateString()
 }
 
 function getWeaponImgObj(weapon_json) {
