@@ -236,6 +236,7 @@ def get_kills_misc():
         log.error(f"Internal error getting `kills_misc`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500
 
+
 # Skins
 @api_routes.route("/api/player_skin/<uuid>")
 def get_player_skin(uuid):
@@ -258,15 +259,14 @@ def get_player_face(uuid):
         return {"error": "internal error"}, 500
 
 
-
 # Showcase
-# TODO: compress images before saving them, and maybe convert them to webp
 @api_routes.route("/api/submit_photo", methods=["POST"])
 def submit_build():
     try:
         os.makedirs(SHOWCASE_SUBMISSIONS_DIR, exist_ok=True)
 
         # Stay safe with disk space
+        # This runs every time, so optimize later.
         def _get_dir_size(path):
             total = 0
             for dirpath, _, filenames in os.walk(path):
