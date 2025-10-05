@@ -111,23 +111,6 @@ def get_all_players():
         log.error(f"Internal error getting `players`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500
 
-@api_routes.route("/api/uuid_to_name/<uuid>")
-def get_name_from_uuid(uuid):
-    try:
-        with sqlite3.connect(ATLAS_DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            cursor.execute("SELECT name FROM players WHERE uuid = ?", (uuid,))
-            result = cursor.fetchone()
-
-        if result:
-            return result[0], 200
-        else:
-            {"error": "player not found"}, 404
-    except Exception:
-        log.error(f"Internal error getting `uuid_to_name`: {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
 @api_routes.route("/api/players_misc")
 def get_players_misc():
     try:
