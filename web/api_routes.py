@@ -111,23 +111,6 @@ def get_all_players():
         log.error(f"Internal error getting `players`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500
 
-@api_routes.route("/api/uuid_to_name/<uuid>")
-def get_name_from_uuid(uuid):
-    try:
-        with sqlite3.connect(ATLAS_DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            cursor.execute("SELECT name FROM players WHERE uuid = ?", (uuid,))
-            result = cursor.fetchone()
-
-        if result:
-            return result[0], 200
-        else:
-            {"error": "player not found"}, 404
-    except Exception:
-        log.error(f"Internal error getting `uuid_to_name`: {traceback.format_exc()}")
-        return {"error": "internal error"}, 500
-
 @api_routes.route("/api/players_misc")
 def get_players_misc():
     try:
@@ -236,6 +219,7 @@ def get_kills_misc():
         log.error(f"Internal error getting `kills_misc`: {traceback.format_exc()}")
         return {"error": "internal error"}, 500
 
+
 # Skins
 @api_routes.route("/api/player_skin/<uuid>")
 def get_player_skin(uuid):
@@ -258,15 +242,14 @@ def get_player_face(uuid):
         return {"error": "internal error"}, 500
 
 
-
 # Showcase
-# TODO: compress images before saving them, and maybe convert them to webp
 @api_routes.route("/api/submit_photo", methods=["POST"])
 def submit_build():
     try:
         os.makedirs(SHOWCASE_SUBMISSIONS_DIR, exist_ok=True)
 
         # Stay safe with disk space
+        # This runs every time, so optimize later.
         def _get_dir_size(path):
             total = 0
             for dirpath, _, filenames in os.walk(path):

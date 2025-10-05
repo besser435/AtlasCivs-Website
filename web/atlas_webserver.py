@@ -3,6 +3,7 @@ from flask import Flask
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+from cache_rules import init_cache_headers
 from template_routes import template_routes
 from api_routes import api_routes
 from stats_routes import stats_routes
@@ -17,6 +18,7 @@ app = Flask(__name__, template_folder="html", static_folder="")  # Tell Flask `s
 app.register_blueprint(template_routes)
 app.register_blueprint(api_routes)
 app.register_blueprint(stats_routes)
+init_cache_headers(app)
 
 
 if __name__ == "__main__":
